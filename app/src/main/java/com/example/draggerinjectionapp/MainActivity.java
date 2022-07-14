@@ -8,16 +8,12 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
-
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.media.session.MediaSessionCompat;
+import android.os.SystemClock;
 import android.view.View;
 import android.widget.EditText;
-
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -34,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
 
     private EditText titleET, messageET;
     private NotificationManagerCompat notificationManagerCompat;
-    private MediaSessionCompat mediaSessionCompat;
+
     static List<Message> MESSAGES = new ArrayList<>() ;
 
 
@@ -46,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
         notificationManagerCompat =NotificationManagerCompat.from(this);
         titleET = findViewById(R.id.id_edit_text_title);
         messageET = findViewById(R.id.id_edit_text_message);
-        mediaSessionCompat = new MediaSessionCompat(this,"tag");
+
 
         Person jim = new Person.Builder().setName("Jim").build();
         Person jenny = new Person.Builder().setName("Jenny").build();
@@ -149,29 +145,45 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void sendOnChannel2(View view) {
+        final int progressMax = 100;
 
-        String title =titleET.getText().toString();
-        String message =messageET.getText().toString();
-        Bitmap artwork = BitmapFactory.decodeResource(getResources(),R.drawable.tedybeer);
-        Notification notification =new NotificationCompat.Builder(this,
+
+        NotificationCompat.Builder notification = new NotificationCompat.Builder(this,
                 CHANNEL_2_ID)
                 .setSmallIcon(R.drawable.ic_two)
-                .setContentTitle(title)
-                .setContentText(message)
-                .setLargeIcon(artwork)
-                .addAction(R.drawable.dislike,"Dislike",null)
-                .addAction(R.drawable.ic_previous,"Previous",null)
-                .addAction(R.drawable.ic_pause,"Pause",null)
-                .addAction(R.drawable.ic_next,"Next",null)
-                .addAction(R.drawable.likeicon,"Like",null)
-                .setStyle(new androidx.media.app.NotificationCompat.MediaStyle()
-                        .setShowActionsInCompactView(1,2,3)
-                        .setMediaSession(mediaSessionCompat.getSessionToken()))
-                .setSubText("Sub Text")
-
+                .setContentTitle("Download")
+                .setContentText("Download in progress")
                 .setPriority(NotificationCompat.PRIORITY_LOW)
-                .build();
-        notificationManagerCompat.notify(2,notification);
+                .setOngoing(true)
+                .setOnlyAlertOnce(true)
+                // false for determinate progress
+                .setProgress(progressMax, 0, false);
+        // inderterminate progress
+        // it will be true
+        // and setprogress will be commented out
+
+        notificationManagerCompat.notify(2, notification.build());
+
+        new Thread(
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        SystemClock.sleep(2000);
+                        for (int progress = 0; progress <= progressMax; progress += 10) {
+
+                            notification.setProgress(progressMax, progress, false);
+                            notificationManagerCompat.notify(2, notification.build());
+                            SystemClock.sleep(1000);
+
+                        }
+                        notification.setContentText("Download finished")
+                                .setProgress(0, 0, false)
+                                .setOngoing(false);
+                        notificationManagerCompat.notify(2, notification.build());
+
+                    }
+                }
+        ).start();
 
     }
 }
