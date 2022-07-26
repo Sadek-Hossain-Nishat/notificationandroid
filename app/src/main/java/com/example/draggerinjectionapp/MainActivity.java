@@ -3,6 +3,7 @@ package com.example.draggerinjectionapp;
 
 import static com.example.draggerinjectionapp.NotificationApp.CHANNEL_1_ID;
 import static com.example.draggerinjectionapp.NotificationApp.CHANNEL_2_ID;
+import static com.example.draggerinjectionapp.NotificationApp.GROUP_1_ID;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -247,6 +248,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    public void deleteNotificationChannels(View view) {
+
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationManager manager = getSystemService(NotificationManager.class);
+//            manager.deleteNotificationChannel(CHANNEL_3_ID);
+            manager.deleteNotificationChannelGroup(GROUP_1_ID);
+        }
+
+
+    }
 }
 
 
