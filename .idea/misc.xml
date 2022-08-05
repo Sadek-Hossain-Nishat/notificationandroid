@@ -3,7 +3,10 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/DraggerInjectionApp/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.106" />
         <entry key="..\:/DraggerInjectionApp/app/src/main/res/layout/activity_main.xml" value="0.2" />
+        <entry key="..\:/DraggerInjectionApp/app/src/main/res/layout/notification_collapsed.xml" value="0.25" />
+        <entry key="..\:/DraggerInjectionApp/app/src/main/res/layout/notification_expanded.xml" value="0.19895833333333332" />
         <entry key="..\:/DraggerInjectionApp/app/src/main/res/layout/song_layout.xml" value="0.18" />
       </map>
     </option>
