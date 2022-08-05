@@ -4,6 +4,8 @@ package com.example.draggerinjectionapp;
 import static com.example.draggerinjectionapp.NotificationApp.CHANNEL_ID;
 
 import android.app.Notification;
+import android.app.PendingIntent;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.RemoteViews;
@@ -31,11 +33,23 @@ public class MainActivity extends AppCompatActivity {
 
     public void showCustomNotification(View view) {
 
-        RemoteViews collapseView = new RemoteViews(getPackageName(),
+        RemoteViews collapsedView = new RemoteViews(getPackageName(),
                 R.layout.notification_collapsed);
 
         RemoteViews expandedView = new RemoteViews(getPackageName(),
                 R.layout.notification_expanded);
+
+
+        Intent clickIntent = new Intent(this, NotificationReceiver.class);
+        PendingIntent clickPendingIntent = PendingIntent.getBroadcast(this,
+                0, clickIntent, 0);
+
+        collapsedView.setTextViewText(R.id.id_text_view_collapsed_1, "Hello World");
+
+
+        expandedView.setImageViewResource(R.id.id_image_view_expanded, R.drawable.beautifulimage);
+
+        expandedView.setOnClickPendingIntent(R.id.id_image_view_expanded, clickPendingIntent);
 
 
         Notification notification = new NotificationCompat.Builder(
@@ -43,9 +57,9 @@ public class MainActivity extends AppCompatActivity {
                 this, CHANNEL_ID
 
         ).setSmallIcon(R.drawable.ic_launcher_foreground)
-                .setCustomContentView(collapseView)
+                .setCustomContentView(collapsedView)
                 .setCustomBigContentView(expandedView)
-                .setStyle(new NotificationCompat.DecoratedCustomViewStyle())
+                //.setStyle(new NotificationCompat.DecoratedCustomViewStyle())
                 .build();
 
         notificationmanager.notify(1, notification);
